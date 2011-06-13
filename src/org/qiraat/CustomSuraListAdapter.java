@@ -40,9 +40,8 @@ class SuraAdapterView extends LinearLayout {
         suraControl.setGravity(Gravity.RIGHT);
         /*Shader textShader = new LinearGradient(0, 0, 0, 20,new int[]{Color.GREEN,Color.BLACK},new float[]{0, 1}, TileMode.CLAMP);
         suraControl.getPaint().setShader(textShader);*/
-        suraControl.setTextColor(R.color.brown);
-        addView( suraControl, suraParams);      
-
+        suraControl.setTextColor(R.color.browney);
+        addView( suraControl, suraParams);
         
       
     }

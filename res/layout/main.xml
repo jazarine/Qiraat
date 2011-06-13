@@ -9,6 +9,6 @@
               android:layout_weight="1"
               android:fastScrollEnabled="true"
               android:scrollingCache="false"
-              android:background="@drawable/suralistbg"
+              android:background="@drawable/headerbg"
               android:cacheColorHint="#00000000"/>
 </LinearLayout>

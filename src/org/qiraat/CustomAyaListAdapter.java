@@ -49,7 +49,7 @@ class AyahAdapterView extends LinearLayout {
         Typeface externalFont=Typeface.createFromAsset(context.getAssets(), "fonts/me_quran_volt_newmet.ttf");
        	ayahControl.setTypeface(externalFont);
         ayahControl.setTextSize(25);
-        ayahControl.setTextColor(R.color.brown);
+        ayahControl.setTextColor(Color.BLACK);
         //ayahControl.setWidth();
         ayahControl.setText(ayah +'\u200F');	//Jaz - Append the RTF character so that the last character is displayed as last character itself.
         ayahControl.setGravity(Gravity.RIGHT);
