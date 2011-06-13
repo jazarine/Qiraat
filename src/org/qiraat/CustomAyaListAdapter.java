@@ -1,4 +1,12 @@
 					/* In the name of GOD, the Most Gracious, the Most Merciful */
+/*
+ *	Date : 27th of May 2011
+ *	Description : Adapter for the aya listview
+ *
+ * 	Author	: Jazarine Jamal
+ *  E-Mail 	: jazarinester@gmail.com
+ *  Web		: http://www.jazarine.com
+ * */
 package org.qiraat;
 
 import java.util.List;

@@ -1,4 +1,5 @@
 					/* In the name of GOD, the Most Gracious, the Most Merciful */
+//Not used at the moment
 package org.qiraat;
 
 public class Sura

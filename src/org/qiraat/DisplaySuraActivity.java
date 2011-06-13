@@ -1,4 +1,12 @@
 					/* In the name of GOD, the Most Gracious, the Most Merciful */
+/*
+ *	Date : 27th of May 2011
+ *	Description : Lists the ayas in the selected Sura
+ *
+ * 	Author	: Jazarine Jamal
+ *  E-Mail 	: jazarinester@gmail.com
+ *  Web		: http://www.jazarine.com
+ * */
 package org.qiraat;
 
 import java.io.BufferedInputStream;
