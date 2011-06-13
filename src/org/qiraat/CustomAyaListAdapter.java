@@ -58,6 +58,11 @@ class AyahAdapterView extends LinearLayout {
         //Translation..
         if(nTranslationVal != 0)
         {
+        	Typeface translatedTypeFace = Typeface.create("serif", Typeface.ITALIC);
+			translatedAyahControl.setTypeface(translatedTypeFace );
+			translatedAyahControl.setTextColor(Color.BLACK);
+	        translatedAyahControl.setGravity(Gravity.LEFT);
+	        translatedAyahControl.setTextSize(20);
 	        if(nTranslationVal == 2)
 	        {
 		        externalFont=Typeface.createFromAsset(context.getAssets(), "fonts/suruma.ttf");
@@ -65,9 +70,6 @@ class AyahAdapterView extends LinearLayout {
 		        translatedAyahControl.setTextSize(25);
 	        }
 	        translatedAyahControl.setText(translatedAya);
-	        
-	        translatedAyahControl.setTextColor(Color.BLACK);
-	        translatedAyahControl.setGravity(Gravity.LEFT);
 	        addView(translatedAyahControl,translatedAyaParams);
         }
         addView(ayahControl, ayaParams);

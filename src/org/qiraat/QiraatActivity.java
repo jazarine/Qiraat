@@ -38,7 +38,7 @@ public class QiraatActivity extends Activity {
         	suraListView = (ListView)findViewById(R.id.surahList);
         	
         	ArrayList<String> surahList = new ArrayList<String>();
-            
+            ArrayList<String> translatedSuraList = new ArrayList<String>();
             
             XmlPullParser xpp=this.getResources().getXml(R.xml.qurandata);
             surahList = MetaDataParser.getSurahNames(this,xpp);
@@ -46,7 +46,10 @@ public class QiraatActivity extends Activity {
             xpp=this.getResources().getXml(R.xml.qurandata);
             numAyasList = MetaDataParser.getNumAyas(this,xpp);
             
-            CustomSuraListAdapter customAdapter = new CustomSuraListAdapter(this, surahList);
+            xpp = this.getResources().getXml(R.xml.qurandata);
+            translatedSuraList = MetaDataParser.getTranslatedSuraNames(this,xpp);
+            
+            CustomSuraListAdapter customAdapter = new CustomSuraListAdapter(this, surahList,translatedSuraList);
             suraListView.setAdapter(customAdapter);
             
             //OnCLick Example..

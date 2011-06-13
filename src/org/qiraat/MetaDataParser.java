@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import org.xmlpull.v1.XmlPullParser;
 
 import android.content.Context;
+import android.util.Log;
  
 public class MetaDataParser
 {
@@ -79,5 +80,34 @@ public class MetaDataParser
 			
 		}
 		return numAyasList;
+	}
+
+	public static ArrayList<String> getTranslatedSuraNames(QiraatActivity qiraatActivity, XmlPullParser xpp)
+	{
+		// TODO Auto-generated method stub
+		ArrayList<String> translatedSuraNameList = new ArrayList<String>();
+		try 
+		{
+			//XmlPullParser xpp=context.getResources().getXml(R.xml.qurandata);
+			while (xpp.getEventType()!=XmlPullParser.END_DOCUMENT)
+			{
+				if (xpp.getEventType()==XmlPullParser.START_TAG)
+				{
+					if (xpp.getName().equals("sura"))
+					{
+						//String surahName=new ArabicReshaper(xpp.getAttributeValue(3).toString()).getReshapedWord();
+						String translatedSuraName=xpp.getAttributeValue(5).toString();
+						translatedSuraNameList.add(translatedSuraName);
+					}
+				}
+				xpp.next();
+			}
+		}
+		catch(Exception ex)
+		{
+			Log.e("Error in getTranslatedSuraNames", ex.toString());
+			return null;
+		}
+		return translatedSuraNameList;
 	}
 }

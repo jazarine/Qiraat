@@ -9,6 +9,7 @@
  * */
 package org.qiraat;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
@@ -23,24 +24,44 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.LinearLayout.LayoutParams;
 
 class SuraAdapterView extends LinearLayout {        
     public static final String LOG_TAG = "WeatherAdapterView";
 
-    public SuraAdapterView(Context context, String surah, int position) {
+    public SuraAdapterView(Context context, String surah, String translatedSuraName, int position) {
         super( context );
-
-        LinearLayout.LayoutParams suraParams = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
-        suraParams.rightMargin = 30;
+        
+        LinearLayout.LayoutParams suraParams = new LinearLayout.LayoutParams(100,LayoutParams.WRAP_CONTENT);
+        suraParams.weight = 1;
+        suraParams.bottomMargin = 5;
+        suraParams.topMargin=5;
+        suraParams.rightMargin=20;
+        LinearLayout.LayoutParams translatedSuraParams = new LinearLayout.LayoutParams(90,LayoutParams.WRAP_CONTENT);
+        translatedSuraParams.weight = 1;
+        translatedSuraParams.bottomMargin=50;
+        translatedSuraParams.topMargin = 5;
+        
+        
         TextView suraControl = new TextView( context );
+        TextView translatedSuraControl = new TextView( context );
+        
         Typeface externalFont=Typeface.createFromAsset(context.getAssets(), "fonts/me_quran_volt_newmet.ttf");
         suraControl.setTypeface(externalFont);
         suraControl.setTextSize(30);
         suraControl.setText(surah);
         suraControl.setGravity(Gravity.RIGHT);
-        /*Shader textShader = new LinearGradient(0, 0, 0, 20,new int[]{Color.GREEN,Color.BLACK},new float[]{0, 1}, TileMode.CLAMP);
-        suraControl.getPaint().setShader(textShader);*/
+        
         suraControl.setTextColor(0xff552D00);		//Setting R.color.browney does not work for some reason! Required to use the HexCode
+        
+        translatedSuraControl.setText(translatedSuraName);
+        translatedSuraControl.setTextSize(22);
+        Typeface translatedTypeFace = Typeface.create("serif", Typeface.ITALIC);
+		translatedSuraControl.setTypeface(translatedTypeFace );
+        translatedSuraControl.setTextColor(Color.BLACK);
+        translatedSuraControl.setGravity(Gravity.LEFT);
+        
+        addView(translatedSuraControl,translatedSuraParams);
         addView( suraControl, suraParams);
         
       
@@ -50,10 +71,12 @@ class SuraAdapterView extends LinearLayout {
 class CustomSuraListAdapter extends BaseAdapter{
 	private Context context;
     private List<String> surahList;
+    private List<String> translatedSuraList;
 
-    public CustomSuraListAdapter(Context context, List<String> surahList ) { 
+    public CustomSuraListAdapter(Context context, List<String> surahList, List<String> translatedSuraList ) { 
         this.context = context;
         this.surahList = surahList;
+        this.translatedSuraList = translatedSuraList;
     }
 	
 	
@@ -80,7 +103,8 @@ class CustomSuraListAdapter extends BaseAdapter{
 	public View getView(int position, View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
 		String surah = surahList.get(position);
-        return new SuraAdapterView(this.context, surah, position );
+		String translatedSuraName = translatedSuraList.get(position);
+        return new SuraAdapterView(this.context, surah, translatedSuraName, position );
 	}
 	
 }
