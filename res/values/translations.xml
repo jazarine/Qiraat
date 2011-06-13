@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<array name="translations">
+		<item>No Translation/Transliteration</item>
+		<item>English - Yusuf Ali</item>
+		<item>Malayalam - Cheriyamundam</item>
+	</array>
+</resources>
