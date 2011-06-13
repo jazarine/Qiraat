@@ -40,7 +40,7 @@ class SuraAdapterView extends LinearLayout {
         suraControl.setGravity(Gravity.RIGHT);
         /*Shader textShader = new LinearGradient(0, 0, 0, 20,new int[]{Color.GREEN,Color.BLACK},new float[]{0, 1}, TileMode.CLAMP);
         suraControl.getPaint().setShader(textShader);*/
-        suraControl.setTextColor(R.color.browney);
+        suraControl.setTextColor(0xff552D00);		//Setting R.color.browney does not work for some reason! Required to use the HexCode
         addView( suraControl, suraParams);
         
       
