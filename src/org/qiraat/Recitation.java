@@ -150,6 +150,7 @@ public class Recitation
 			
 			qiraatPlayer.start();
 			currentAyaPos++;
+			DisplaySuraActivity.playStopMenuItem.setTitle("Stop");
 		}
 		else
 		{
@@ -189,5 +190,13 @@ public class Recitation
 			//Need to set this to null manually. After calling release(), cannot call any other method on the mediaplayer object.
 			qiraatPlayer = null;
 		}
+	}
+	public static boolean isPlaying() {
+		// TODO Auto-generated method stub
+		if(qiraatPlayer != null)
+		{
+			return qiraatPlayer.isPlaying();
+		}
+		return false;
 	}
 }

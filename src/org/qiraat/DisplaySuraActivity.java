@@ -47,7 +47,6 @@ public class DisplaySuraActivity extends Activity
 	private static ListView ayahListView;
 	int suraPosition = 0;
 	int numAyas = 0;
-	public static MenuItem menuItemRecite12;
 	public static int nReciterVoiceID = 0;
 	public static ProgressDialog mProgressDialog;
 	public static final int DIALOG_DOWNLOAD_PROGRESS = 0;
@@ -110,7 +109,16 @@ public class DisplaySuraActivity extends Activity
 		inflater.inflate(R.menu.suramenu,menu);
 		return true;
 	}
-	
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu)
+	{
+		playStopMenuItem = menu.getItem(0);
+		if(Recitation.isPlaying())
+		{
+			playStopMenuItem.setTitle("Stop");
+		}
+		return super.onPrepareOptionsMenu(menu);
+	}
 	@Override
 	public void onBackPressed()
 	{
@@ -142,7 +150,7 @@ public class DisplaySuraActivity extends Activity
 			case R.id.recite_sura:
 				//play sura
 				playStopMenuItem = menuItem;
-				if(menuItem.getTitle() != "Stop")
+				if((menuItem.getTitle() != "Stop") &&(!Recitation.isPlaying()))
 				{
 					initializeFolders();
 					
