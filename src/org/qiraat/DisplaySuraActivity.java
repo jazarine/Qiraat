@@ -53,6 +53,7 @@ public class DisplaySuraActivity extends Activity
 	public static long totalDownloadSize = 0;
 	public static long totalDownloaded = 0;
 	public static MenuItem playStopMenuItem;
+	public static int statTranslationVal = -1;
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
@@ -75,6 +76,7 @@ public class DisplaySuraActivity extends Activity
             ayahList = SurahDataParser.getAyahList(this,xpp,suraPosition);
         	
             int nTranslationVal = bundle.getInt("translationValue");
+            statTranslationVal = nTranslationVal;
             if(nTranslationVal == 1)
             {
             	xpp=this.getResources().getXml(R.xml.enyusufali);
@@ -252,7 +254,7 @@ public class DisplaySuraActivity extends Activity
 	}
 	private void openChangeReciterVoiceDialog() {
 		// TODO Auto-generated method stub
-		new AlertDialog.Builder(this)
+		/*new AlertDialog.Builder(this)
 		.setTitle("Select Reciter")
 		.setItems(R.array.recitervoices,
 				new DialogInterface.OnClickListener() {
@@ -263,7 +265,31 @@ public class DisplaySuraActivity extends Activity
 						changeReciterVoice(arg1);
 					}
 				})
-				.show();
+				.show();*/
+		//final int selectedItem = -1;
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle("Select Reciter");
+		builder.setSingleChoiceItems(R.array.recitervoices,nReciterVoiceID,
+				new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface arg0, int arg1) {
+						// TODO Auto-generated method stub
+						//changeReciterVoice(arg1);
+						nReciterVoiceID = arg1;
+					}
+				});
+		
+		builder.setPositiveButton("OK", new OnClickListener()
+		{
+			@Override
+			public void onClick(DialogInterface arg0, int arg1) {
+				// TODO Auto-generated method stub
+				changeReciterVoice(nReciterVoiceID);
+			}
+		});
+		AlertDialog alert = builder.create();		
+		alert.show();
 	
 	}
 	public void changeReciterVoice(int reciterVoiceID)
@@ -450,19 +476,28 @@ public class DisplaySuraActivity extends Activity
 
 	private void openChangeTranslationDialog() {
 		// TODO Auto-generated method stub
-		new AlertDialog.Builder(this)
-			.setTitle("Select Translation")
-			.setItems(R.array.translations,
-					new DialogInterface.OnClickListener() {
-						
-						@Override
-						public void onClick(DialogInterface arg0, int arg1) {
-							// TODO Auto-generated method stub
-							changeTranslation(arg1);
-						}
-					})
-					.show();
-		
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle("Select Translation");
+		builder.setSingleChoiceItems(R.array.translations,statTranslationVal,
+				new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface arg0, int arg1) {
+						// TODO Auto-generated method stub
+						//changeTranslation(arg1);
+						statTranslationVal = arg1;
+					}
+				});
+		builder.setPositiveButton("OK", new OnClickListener()
+		{
+			@Override
+			public void onClick(DialogInterface arg0, int arg1) {
+				// TODO Auto-generated method stub
+				changeTranslation(statTranslationVal);
+			}
+		});
+		AlertDialog alert = builder.create();		
+		alert.show();
 	}
 
 	public static void goToNextAya(int ayaPos) {
@@ -513,6 +548,7 @@ public class DisplaySuraActivity extends Activity
 				URLConnection connection = url.openConnection();
 				connection.connect();
 				totalSizeforDownload += connection.getContentLength();
+				Log.d("Downloading URL: ",sUrl);
 				Log.d("Calculating download size", nAyaCount+" : "+totalSizeforDownload);
 			}
 			catch(Exception ex)
