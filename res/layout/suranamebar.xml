@@ -3,9 +3,9 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content">
  <TextView android:id="@+id/suraHeader"
- 			android:text="Header!"
+ 			android:text="SuraName"
  			android:textSize="40dp"
- 			android:textColor="@color/browney"
+ 			android:textColor="@color/brown"
  			android:layout_width="fill_parent"
  			android:layout_height="wrap_content"
  			android:layout_weight="0"

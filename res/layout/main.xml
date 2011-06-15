@@ -3,6 +3,7 @@
               android:orientation="vertical"
               android:layout_width="fill_parent"
               android:layout_height="fill_parent">
+    <include layout="@layout/qiraatheaderbar"/>
     <ListView android:layout_width="fill_parent"
               android:id="@+id/surahList"
               android:layout_height="wrap_content"
