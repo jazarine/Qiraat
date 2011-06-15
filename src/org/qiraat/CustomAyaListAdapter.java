@@ -22,7 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 class AyahAdapterView extends LinearLayout {        
-    public static final String LOG_TAG = "WeatherAdapterView";
+    public static final String LOG_TAG = "Custom Aya List Adapter";
 
     public AyahAdapterView(Context context, String ayah, String translatedAya, int nTranslationVal) {
         super( context );
@@ -47,7 +47,7 @@ class AyahAdapterView extends LinearLayout {
         TextView translatedAyahControl = new TextView( context );
         
         Typeface externalFont=Typeface.createFromAsset(context.getAssets(), "fonts/me_quran_volt_newmet.ttf");
-       	ayahControl.setTypeface(externalFont);
+        ayahControl.setTypeface(externalFont);
         ayahControl.setTextSize(25);
         ayahControl.setTextColor(Color.BLACK);
         //ayahControl.setWidth();
