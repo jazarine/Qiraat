@@ -34,6 +34,9 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.os.PowerManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -41,6 +44,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class DisplaySuraActivity extends Activity
 {
@@ -49,11 +53,14 @@ public class DisplaySuraActivity extends Activity
 	int numAyas = 0;
 	public static int nReciterVoiceID = 0;
 	public static ProgressDialog mProgressDialog;
+	public static ProgressDialog mCalcSizeDialog;
 	public static final int DIALOG_DOWNLOAD_PROGRESS = 0;
+	public static final int DIALOG_CALCSIZE_PROGRESS = 1;
 	public static long totalDownloadSize = 0;
 	public static long totalDownloaded = 0;
 	public static MenuItem playStopMenuItem;
 	public static int statTranslationVal = -1;
+	public Handler sizeCalculatorHandler;
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
@@ -139,7 +146,15 @@ public class DisplaySuraActivity extends Activity
             //mProgressDialog.setMax(numAyas);		//Jaz - Commented out
             mProgressDialog.show();
             return mProgressDialog;
-        default:
+		case DIALOG_CALCSIZE_PROGRESS:
+			mCalcSizeDialog = new ProgressDialog(this);
+			mCalcSizeDialog.setMessage("Calculating Download Size..");
+			mCalcSizeDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+			mCalcSizeDialog.setCancelable(true);
+            //mProgressDialog.setMax(numAyas);		//Jaz - Commented out
+			mCalcSizeDialog.show();
+            return mCalcSizeDialog;
+		default:
         	return null;
             	
 		}
@@ -186,11 +201,57 @@ public class DisplaySuraActivity extends Activity
 								if(haveInternet())
 								{
 									int audhuBismiExists = getAudhuBismi(false);
-									totalDownloadSize = getTotalDownloadSize();
-									if(totalDownloadSize != 0)
-									{
-										startDownload(DisplaySuraActivity.this.suraPosition,DisplaySuraActivity.this.numAyas);
-									}
+									//+ Jaz 06/21/2011 - Show Progress circle when calculating size to download
+									PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+									final PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "Stay awake on size computation");
+									wl.acquire();
+									final ProgressDialog dialog = ProgressDialog.show(
+		                                    DisplaySuraActivity.this,
+		                                    "Computing size of sura",
+		                                    "This may take some time depending on the size of the sura.");
+									dialog.setCancelable(true);
+									dialog.show();
+									DisplaySuraActivity.this.sizeCalculatorHandler = new Handler() {
+										public void handleMessage(Message msg){
+											switch(msg.what){
+											case 100:
+												dialog.dismiss();
+												if(totalDownloadSize != 0)
+			                            		{
+			                            			wl.release();
+													startDownload(DisplaySuraActivity.this.suraPosition,DisplaySuraActivity.this.numAyas);
+			                            		}
+												else
+												{
+													AlertDialog.Builder adb=new AlertDialog.Builder(DisplaySuraActivity.this);
+													adb.setTitle("Cannot access everyayah.com");
+													adb.setMessage("Could not make a connection to everyayah.com. The server may be down. Please try again later.");
+													adb.setPositiveButton("OK",null);
+													adb.show();
+												}
+											}
+										}
+									};
+									//- JJ
+									Thread background = new Thread (new Runnable() {
+				                           public void run() {
+				                               try {
+				                            	   	totalDownloadSize = getTotalDownloadSize();
+				                            	   	dialog.setProgress(100);
+				                            	   	Message msg = new Message();
+				                            	   	msg.what = 100;
+				                            	   	DisplaySuraActivity.this.sizeCalculatorHandler.sendMessage(msg);
+				                               }
+				                               catch (Exception e) {
+				                                   // if something fails do something smart
+				                            	   Log.e("Error in sizeCalculatorThread", e.toString());
+				                            	   e.printStackTrace();
+				                               }
+				                           }
+									});
+									background.setPriority(java.lang.Thread.MAX_PRIORITY);
+									background.start();
+									
 								}
 								else
 								{
@@ -223,7 +284,6 @@ public class DisplaySuraActivity extends Activity
 			}
 			return false;
 	}
-
 	protected boolean haveInternet() {
 		// TODO Auto-generated method stub
 		/*NetworkInfo info = (NetworkInfo) ((ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
@@ -544,21 +604,21 @@ public class DisplaySuraActivity extends Activity
 			sUrl = "http://www.everyayah.com/data/"+getNameInUrl()+suraID+ayaID+".mp3";
 			try
 			{
+				Log.d("Checking URL: ",sUrl);
 				URL url = new URL(sUrl);
 				URLConnection connection = url.openConnection();
 				connection.connect();
 				totalSizeforDownload += connection.getContentLength();
-				Log.d("Downloading URL: ",sUrl);
-				Log.d("Calculating download size", nAyaCount+" : "+totalSizeforDownload);
+				if(totalSizeforDownload < 0)
+				{
+					Log.d("getTotalDownloadSize","Size is negative. Returning");
+					return 0;
+				}
+				Log.d("Calculated download size", nAyaCount+" : "+totalSizeforDownload);
 			}
 			catch(Exception ex)
 			{
 				Log.e("Error in getTotalDownloadSize", ex.toString());
-				AlertDialog.Builder adb=new AlertDialog.Builder(DisplaySuraActivity.this);
-				adb.setTitle("Cannot access everyayah.com");
-				adb.setMessage("Could not make a connection to everyayah.com. The server may be down. Please try again later.");
-				adb.setPositiveButton("OK",null);
-				adb.show();
 				return 0;
 			}
 		}
