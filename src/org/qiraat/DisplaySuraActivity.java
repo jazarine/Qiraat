@@ -55,7 +55,6 @@ public class DisplaySuraActivity extends Activity
 	public static ProgressDialog mProgressDialog;
 	public static ProgressDialog mCalcSizeDialog;
 	public static final int DIALOG_DOWNLOAD_PROGRESS = 0;
-	public static final int DIALOG_CALCSIZE_PROGRESS = 1;
 	public static long totalDownloadSize = 0;
 	public static long totalDownloaded = 0;
 	public static MenuItem playStopMenuItem;
@@ -73,7 +72,6 @@ public class DisplaySuraActivity extends Activity
             TextView suraHeaderView = (TextView)findViewById(R.id.suraHeader);
             Typeface externalFont=Typeface.createFromAsset(getAssets(), "fonts/me_quran_volt_newmet.ttf");
             suraHeaderView.setTypeface(externalFont);
-            //ayahListView.setBackgroundResource(android.R.color.transparent);
             XmlPullParser xpp=this.getResources().getXml(R.xml.quransimple);
             
             Bundle bundle = this.getIntent().getExtras();
@@ -143,20 +141,10 @@ public class DisplaySuraActivity extends Activity
             mProgressDialog.setMessage("Downloading Sura..");
             mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
             mProgressDialog.setCancelable(true);
-            //mProgressDialog.setMax(numAyas);		//Jaz - Commented out
             mProgressDialog.show();
             return mProgressDialog;
-		case DIALOG_CALCSIZE_PROGRESS:
-			mCalcSizeDialog = new ProgressDialog(this);
-			mCalcSizeDialog.setMessage("Calculating Download Size..");
-			mCalcSizeDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			mCalcSizeDialog.setCancelable(true);
-            //mProgressDialog.setMax(numAyas);		//Jaz - Commented out
-			mCalcSizeDialog.show();
-            return mCalcSizeDialog;
 		default:
         	return null;
-            	
 		}
 	}
 	@Override
@@ -279,19 +267,11 @@ public class DisplaySuraActivity extends Activity
 			case R.id.change_reciterVoice:
 				openChangeReciterVoiceDialog();
 				return true;
-			//case R.id.download_sura:
-				//startDownload(DisplaySurahActivity.this.suraPosition,DisplaySurahActivity.this.numAyas);
 			}
 			return false;
 	}
 	protected boolean haveInternet() {
 		// TODO Auto-generated method stub
-		/*NetworkInfo info = (NetworkInfo) ((ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
-		if((info == null) || !info.isConnected())
-		{
-			return false;
-		}*/
-		
 		ConnectivityManager connec =  (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
 
 		// ARE WE CONNECTED TO THE NET
@@ -314,19 +294,7 @@ public class DisplaySuraActivity extends Activity
 	}
 	private void openChangeReciterVoiceDialog() {
 		// TODO Auto-generated method stub
-		/*new AlertDialog.Builder(this)
-		.setTitle("Select Reciter")
-		.setItems(R.array.recitervoices,
-				new DialogInterface.OnClickListener() {
-					
-					@Override
-					public void onClick(DialogInterface arg0, int arg1) {
-						// TODO Auto-generated method stub
-						changeReciterVoice(arg1);
-					}
-				})
-				.show();*/
-		//final int selectedItem = -1;
+		
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle("Select Reciter");
 		builder.setSingleChoiceItems(R.array.recitervoices,nReciterVoiceID,
@@ -485,15 +453,11 @@ public class DisplaySuraActivity extends Activity
 		// TODO Auto-generated method stub
 		String suraID = calculateSuraId(suraPosition);
 		String ayaID = "";
-		//int lastDownloadedAya = 1;
 		String url = "";
 		
-		//for(int nAyaCount=0;nAyaCount<numAyas;nAyaCount++)
-		//{
-			ayaID = calculateAyaId(1);
-			url = "http://www.everyayah.com/data/"+getNameInUrl()+suraID+ayaID+".mp3";
-			new DownloadRecitation().execute(url,suraID,ayaID);
-		//}
+		ayaID = calculateAyaId(1);
+		url = "http://www.everyayah.com/data/"+getNameInUrl()+suraID+ayaID+".mp3";
+		new DownloadRecitation().execute(url,suraID,ayaID);
 	}
 	
 	private String calculateAyaId(int lastDownloadedAya) 
@@ -544,7 +508,6 @@ public class DisplaySuraActivity extends Activity
 					@Override
 					public void onClick(DialogInterface arg0, int arg1) {
 						// TODO Auto-generated method stub
-						//changeTranslation(arg1);
 						statTranslationVal = arg1;
 					}
 				});
@@ -643,7 +606,6 @@ public class DisplaySuraActivity extends Activity
 				URL url = new URL(aurl[0]);
 				URLConnection connection = url.openConnection();
 				connection.connect();
-				//int lengthOfFile = connection.getContentLength();
 				
 				InputStream input = new BufferedInputStream(url.openStream());
 				
@@ -652,14 +614,12 @@ public class DisplaySuraActivity extends Activity
 				
 				byte data[] = new byte[1024];
 				
-				//long total = 0;	//Made static
+				//long total = 0;	//Commented out and made public static
 				if((aurl[2] != "") && (aurl[2]!="000"))
 				{
 					while ((count = input.read(data)) != -1)
 					{
-						//total+=count;
 						totalDownloaded+=count;
-						//publishProgress(""+(int)(total/lengthOfFile)+aurl[2]);
 						publishProgress(""+(int)((totalDownloaded*100)/totalDownloadSize));
 						output.write(data,0,count);
 					}
@@ -705,7 +665,6 @@ public class DisplaySuraActivity extends Activity
 			if((downloadedAya != "bismillah") && (downloadedAya != "audhubillah") && (downloadedAya != "error!") && (downloadedAya!="000"))
 			{
 				Log.d("Downloaded","Downloaded aya: "+downloadedAya);
-				//publishProgress(""+(int)((Integer.parseInt(downloadedAya))));
 				
 				String suraID = calculateSuraId(suraPosition);
 				String ayaID = "";

@@ -10,6 +10,6 @@
 			  android:layout_weight="1"
               android:fastScrollEnabled="true"
               android:scrollingCache="false"
-			  android:background="@drawable/listviewbg">
+			  android:background="@drawable/ayalistviewbg">
 	</ListView>
 </LinearLayout>

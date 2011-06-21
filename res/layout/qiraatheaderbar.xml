@@ -2,13 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content">
- <TextView android:id="@+id/suraHeader"
- 			android:text="SuraName"
- 			android:textSize="30dp"
+ <TextView android:id="@+id/qiratMainHeader"
+ 			android:text="Qiraat"
+ 			android:textSize="40dp"
  			android:textColor="#ffffff"
  			android:layout_width="fill_parent"
  			android:layout_height="wrap_content"
  			android:layout_weight="0"
  			android:gravity="center"
- 			android:background="@drawable/suranamebarbg"/>
+ 			android:background="@drawable/headerbg"
+ 			android:typeface="serif"/>
 </LinearLayout>
