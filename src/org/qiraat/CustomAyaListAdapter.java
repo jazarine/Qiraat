@@ -5,7 +5,7 @@
  *
  * 	Author	: Jazarine Jamal
  *  E-Mail 	: jazarinester@gmail.com
- *  Web		: http://www.jazarine.com
+ *  Web		: http://www.jazarine.org
  * */
 package org.qiraat;
 
@@ -21,9 +21,7 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-class AyahAdapterView extends LinearLayout {        
-    public static final String LOG_TAG = "Custom Aya List Adapter";
-
+class AyahAdapterView extends LinearLayout {
     public AyahAdapterView(Context context, String ayah, String translatedAya, int nTranslationVal) {
         super( context );
         

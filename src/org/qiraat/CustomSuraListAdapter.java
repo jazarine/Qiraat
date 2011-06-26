@@ -5,7 +5,7 @@
  *
  * 	Author	: Jazarine Jamal
  *  E-Mail 	: jazarinester@gmail.com
- *  Web		: http://www.jazarine.com
+ *  Web		: http://www.jazarine.org
  * */
 package org.qiraat;
 
@@ -26,9 +26,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.LinearLayout.LayoutParams;
 
-class SuraAdapterView extends LinearLayout {        
-    public static final String LOG_TAG = "WeatherAdapterView";
-
+class SuraAdapterView extends LinearLayout {
     public SuraAdapterView(Context context, String surah, String translatedSuraName, int position) {
         super( context );
         

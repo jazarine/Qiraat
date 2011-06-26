@@ -5,7 +5,7 @@
  *
  * 	Author	: Jazarine Jamal
  *  E-Mail 	: jazarinester@gmail.com
- *  Web		: http://www.jazarine.com
+ *  Web		: http://www.jazarine.org
  * */
 package org.qiraat;
 
@@ -25,6 +25,9 @@ import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
 public class QiraatActivity extends Activity {
+	public static final String LOG_TAG = "QiraatActivity";
+	protected static final boolean isDEBUGLOG = false;
+	
 	private ListView suraListView;
 	int[] numAyasList = new int[114];
     /** Called when the activity is first created. */
@@ -73,7 +76,9 @@ public class QiraatActivity extends Activity {
     				}
     				catch(Exception exe)
     				{
-    					Log.d("df", exe.toString());
+    					if (isDEBUGLOG) {
+							Log.d(LOG_TAG, exe.toString());
+						}
     				}
     			}
             });

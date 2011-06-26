@@ -5,7 +5,7 @@
  *
  * 	Author	: Jazarine Jamal
  *  E-Mail 	: jazarinester@gmail.com
- *  Web		: http://www.jazarine.com
+ *  Web		: http://www.jazarine.org
  * */
 package org.qiraat;
 

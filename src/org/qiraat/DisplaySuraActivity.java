@@ -5,7 +5,7 @@
  *
  * 	Author	: Jazarine Jamal
  *  E-Mail 	: jazarinester@gmail.com
- *  Web		: http://www.jazarine.com
+ *  Web		: http://www.jazarine.org
  * */
 package org.qiraat;
 
@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -60,6 +61,9 @@ public class DisplaySuraActivity extends Activity
 	public static MenuItem playStopMenuItem;
 	public static int statTranslationVal = -1;
 	public Handler sizeCalculatorHandler;
+	public static final String LOG_TAG = "DisplaySuraActivity";
+	public static final boolean isDEBUGLOG = true;
+	public static final boolean isERRORLOG = true;
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
@@ -231,9 +235,11 @@ public class DisplaySuraActivity extends Activity
 				                            	   	DisplaySuraActivity.this.sizeCalculatorHandler.sendMessage(msg);
 				                               }
 				                               catch (Exception e) {
-				                                   // if something fails do something smart
-				                            	   Log.e("Error in sizeCalculatorThread", e.toString());
-				                            	   e.printStackTrace();
+				                                   if (isERRORLOG) {
+													// if something fails do something smart
+													Log.e(LOG_TAG, "Error in sizeCalculatorThread" + e.toString());
+													e.printStackTrace();
+												}
 				                               }
 				                           }
 									});
@@ -567,21 +573,39 @@ public class DisplaySuraActivity extends Activity
 			sUrl = "http://www.everyayah.com/data/"+getNameInUrl()+suraID+ayaID+".mp3";
 			try
 			{
-				Log.d("Checking URL: ",sUrl);
+				if (isDEBUGLOG) {
+					Log.d(LOG_TAG, "Checking URL: " + sUrl);
+				}
 				URL url = new URL(sUrl);
 				URLConnection connection = url.openConnection();
-				connection.connect();
-				totalSizeforDownload += connection.getContentLength();
+				/*connection.setConnectTimeout(10000);
+				connection.connect();*/
+				HttpURLConnection c = (HttpURLConnection) url.openConnection();
+				c.setRequestMethod("GET");
+				c.setDoOutput(true);
+				c.setConnectTimeout(10000);
+				//c.connect();
+				//totalSizeforDownload += connection.getContentLength();
+				totalSizeforDownload += c.getContentLength();
 				if(totalSizeforDownload < 0)
 				{
-					Log.d("getTotalDownloadSize","Size is negative. Returning");
+					if (isDEBUGLOG) {
+						Log.d(LOG_TAG, "getTotalDownloadSize: "
+								+ "Size is negative. Returning");
+					}
 					return 0;
 				}
-				Log.d("Calculated download size", nAyaCount+" : "+totalSizeforDownload);
+				if (isDEBUGLOG) {
+					Log.d(LOG_TAG, "Calculated download size till " + nAyaCount
+							+ " : " + totalSizeforDownload);
+				}
 			}
 			catch(Exception ex)
 			{
-				Log.e("Error in getTotalDownloadSize", ex.toString());
+				if (isERRORLOG) {
+					Log.e(LOG_TAG,
+							"Error in getTotalDownloadSize" + ex.toString());
+				}
 				return 0;
 			}
 		}
@@ -641,9 +665,12 @@ public class DisplaySuraActivity extends Activity
 			}
 			catch (Exception e)
 			{
-				// TODO: handle exception
-				Log.e("Download Error!", e.toString() + "Link: "+aurl[0]);
-				e.printStackTrace();
+				if (isERRORLOG) {
+					// TODO: handle exception
+					Log.e(LOG_TAG, "Download Error!: " + e.toString()
+							+ "Link: " + aurl[0]);
+					e.printStackTrace();
+				}
 				return "error!";
 			}
 			
@@ -664,8 +691,9 @@ public class DisplaySuraActivity extends Activity
 		{
 			if((downloadedAya != "bismillah") && (downloadedAya != "audhubillah") && (downloadedAya != "error!") && (downloadedAya!="000"))
 			{
-				Log.d("Downloaded","Downloaded aya: "+downloadedAya);
-				
+				if (isDEBUGLOG) {
+					Log.d(LOG_TAG, "Downloaded aya: " + downloadedAya);
+				}
 				String suraID = calculateSuraId(suraPosition);
 				String ayaID = "";
 				String url = "";
@@ -674,7 +702,10 @@ public class DisplaySuraActivity extends Activity
 				{
 					ayaID = calculateAyaId(Integer.parseInt(downloadedAya)+1);
 					url = "http://www.everyayah.com/data/"+getNameInUrl()+suraID+ayaID+".mp3";
-					Log.d("Downloading Sura", "Downloading sura: "+suraID+", aya: "+ayaID);
+					if (isDEBUGLOG) {
+						Log.d(LOG_TAG, "Downloading sura: " + suraID
+								+ ", aya: " + ayaID);
+					}
 					new DownloadRecitation().execute(url,suraID,ayaID);
 				}
 				else

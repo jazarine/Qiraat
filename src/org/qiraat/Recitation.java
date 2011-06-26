@@ -5,7 +5,7 @@
  *
  * 	Author	: Jazarine Jamal
  *  E-Mail 	: jazarinester@gmail.com
- *  Web		: http://www.jazarine.com
+ *  Web		: http://www.jazarine.org
  * */
 package org.qiraat;
 
@@ -18,6 +18,9 @@ import android.util.Log;
 
 public class Recitation
 {
+	public static final String LOG_TAG = "Recitation";
+	private static final boolean isERRORLOG = false;
+
 	public static MediaPlayer qiraatPlayer = null;
 	public static Context context = null;
 	public static int suraPos = 0;
@@ -118,9 +121,12 @@ public class Recitation
 		} 
 		catch (Exception e)
 		{
-			//Stop playback..
-			Log.e("Error in Playback",e.toString());
-			e.printStackTrace();
+			if (isERRORLOG) {
+				//Stop playback..
+				Log.e(LOG_TAG, "Error in Playback"+ e.toString());
+				e.printStackTrace();
+			}
+			
 			releasePlayer();
 			return;
 		}
@@ -143,7 +149,7 @@ public class Recitation
 			}
 			catch (Exception e)
 			{
-				Log.e("Error in playNextAya",e.toString());
+				Log.e(LOG_TAG, "Error in playNextAya" + e.toString());
 				releasePlayer();
 				return;
 			}

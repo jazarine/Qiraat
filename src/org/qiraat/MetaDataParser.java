@@ -5,7 +5,7 @@
  *
  * 	Author	: Jazarine Jamal
  *  E-Mail 	: jazarinester@gmail.com
- *  Web		: http://www.jazarine.com
+ *  Web		: http://www.jazarine.org
  * */
 package org.qiraat;
 
@@ -18,6 +18,9 @@ import android.util.Log;
  
 public class MetaDataParser
 {
+	public static final String LOG_TAG = "MetaDataParser";
+	private static final boolean isERRORLOG = false;
+	
 	public static ArrayList<String> getSurahNames(Context context,XmlPullParser xpp)
 	{
 		ArrayList<String> surahNameList = new ArrayList<String>();
@@ -105,7 +108,9 @@ public class MetaDataParser
 		}
 		catch(Exception ex)
 		{
-			Log.e("Error in getTranslatedSuraNames", ex.toString());
+			if (isERRORLOG) {
+				Log.e(LOG_TAG, "Error in getTranslatedSuraNames: " + ex.toString());
+			}
 			return null;
 		}
 		return translatedSuraNameList;
