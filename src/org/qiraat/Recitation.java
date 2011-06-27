@@ -36,7 +36,8 @@ public class Recitation
 		Recitation.numAyas = numAyas;
 		Recitation.currentAyaPos = 1;
 		pathDir = new String[numAyas];
-		String applicationAudioPath = DisplaySuraActivity.getAudioPath();
+		//String applicationAudioPath = DisplaySuraActivity.getAudioPath();
+		String applicationAudioPath = DisplaySuraActivity.appAudioPath;
 		for(int nCount=0;nCount<numAyas;nCount++)
 		{
 			if(suraPos<10)

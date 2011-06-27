@@ -35,6 +35,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.os.PowerManager;
@@ -64,6 +65,7 @@ public class DisplaySuraActivity extends Activity
 	public static final String LOG_TAG = "DisplaySuraActivity";
 	public static final boolean isDEBUGLOG = true;
 	public static final boolean isERRORLOG = true;
+	public static String appAudioPath = "";
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
@@ -161,8 +163,43 @@ public class DisplaySuraActivity extends Activity
 				playStopMenuItem = menuItem;
 				if((menuItem.getTitle() != "Stop") &&(!Recitation.isPlaying()))
 				{
-					initializeFolders();
+					boolean mExternalStorageAvailable = false;
+					boolean mExternalStorageWriteable = false;
+					String state = Environment.getExternalStorageState();
+
+					if (Environment.MEDIA_MOUNTED.equals(state)) {
+					    // We can read and write the media
+					    mExternalStorageAvailable = mExternalStorageWriteable = true;
+					} else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+					    // We can only read the media
+					    mExternalStorageAvailable = true;
+					    mExternalStorageWriteable = false;
+					} else {
+					    // Something else is wrong. It may be one of many other states, but all we need
+					    //  to know is we can neither read nor write
+					    mExternalStorageAvailable = mExternalStorageWriteable = false;
+					}
 					
+					if((!mExternalStorageAvailable) || (!mExternalStorageWriteable))
+					{
+						AlertDialog.Builder adb=new AlertDialog.Builder(DisplaySuraActivity.this);
+						adb.setTitle("Error Occured");
+						adb.setMessage("Could not access SD Card.");
+						adb.setPositiveButton("OK", null);
+						adb.show();
+						break;
+					}
+					getAudioPath(DisplaySuraActivity.this.getExternalFilesDir(null).getAbsolutePath());	//Just call this once and set the static var
+					boolean isFoldersInitialized = initializeFolders();
+					if(!isFoldersInitialized)
+					{
+						AlertDialog.Builder adb=new AlertDialog.Builder(DisplaySuraActivity.this);
+						adb.setTitle("Error Occured");
+						adb.setMessage("Recitation files could not be downloaded at this time.");
+						adb.setPositiveButton("OK", null);
+						adb.show();
+						break;
+					}
 					boolean isAvailable = isSuraRecitationAvailable(DisplaySuraActivity.this.suraPosition,DisplaySuraActivity.this.numAyas);
 					if (isAvailable)
 					{
@@ -330,7 +367,7 @@ public class DisplaySuraActivity extends Activity
 	{
 		nReciterVoiceID = reciterVoiceID;		
 	}
-	public static String getAudioPath()
+	public static String getAudioPath(String externalDir)
 	{
 		String reciterVoiceDir = "";
 		switch(DisplaySuraActivity.nReciterVoiceID)
@@ -345,7 +382,8 @@ public class DisplaySuraActivity extends Activity
 			reciterVoiceDir = "Shaatree/";
 			break;
 		}
-		String applicationAudioPath = android.os.Environment.getExternalStorageDirectory() + "/Android/data/com.qiraat/audio/"+reciterVoiceDir;
+		String applicationAudioPath = externalDir + "/audio/"+reciterVoiceDir;
+		appAudioPath = applicationAudioPath;
 		return applicationAudioPath;
 	}
 	private boolean isSuraRecitationAvailable(int suraPosition, int numAyas) {
@@ -353,23 +391,29 @@ public class DisplaySuraActivity extends Activity
 		String suraID = calculateSuraId(suraPosition);
 		
 		String ayaID = calculateAyaId(numAyas);
-		String applicationAudioPath = getAudioPath();
+		
+		//String applicationAudioPath = getAudioPath(DisplaySuraActivity.this.getExternalFilesDir(null).getAbsolutePath());
+		String applicationAudioPath = appAudioPath;
 		File file= new File(applicationAudioPath+suraID+ayaID+".mp3");
 		return file.exists();
 	}
 	
-	private void initializeFolders()
+	private boolean initializeFolders()
 	{
-		File audioDir = new File(getAudioPath());
+		boolean retValue = true;
+		//File audioDir = new File(getAudioPath(DisplaySuraActivity.this.getExternalFilesDir(null).getAbsolutePath()));
+		File audioDir = new File(appAudioPath);
 		// have the object build the directory structure, if needed.
 		if(!audioDir.exists())
 		{
-			audioDir.mkdirs();
+			retValue = audioDir.mkdirs();
 		}
+		return retValue;
 	}
 	private int getAudhuBismi(boolean askUser)
 	{
-		String applicationAudioPath = getAudioPath();
+		//String applicationAudioPath = getAudioPath(DisplaySuraActivity.this.getExternalFilesDir(null).getAbsolutePath());
+		String applicationAudioPath = appAudioPath;
 		
 		File file= new File(applicationAudioPath+"bismillah.mp3");
 		File file2= new File(applicationAudioPath+"audhubillah.mp3");
@@ -633,7 +677,8 @@ public class DisplaySuraActivity extends Activity
 				
 				InputStream input = new BufferedInputStream(url.openStream());
 				
-				String applicationAudioPath = getAudioPath();
+				//String applicationAudioPath = getAudioPath(DisplaySuraActivity.this.getExternalFilesDir(null).getAbsolutePath());
+				String applicationAudioPath = DisplaySuraActivity.appAudioPath;
 				OutputStream output = new FileOutputStream(applicationAudioPath+aurl[1]+aurl[2]+".mp3");
 				
 				byte data[] = new byte[1024];
