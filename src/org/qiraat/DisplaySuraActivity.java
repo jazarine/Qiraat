@@ -63,8 +63,8 @@ public class DisplaySuraActivity extends Activity
 	public static int statTranslationVal = -1;
 	public Handler sizeCalculatorHandler;
 	public static final String LOG_TAG = "DisplaySuraActivity";
-	public static final boolean isDEBUGLOG = true;
-	public static final boolean isERRORLOG = true;
+	public static final boolean isDEBUGLOG = false;
+	public static final boolean isERRORLOG = false;
 	public static String appAudioPath = "";
 	@Override
 	public void onCreate(Bundle savedInstanceState)
