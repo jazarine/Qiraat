@@ -91,7 +91,7 @@ public class Recitation
 			//Play Bismillah..
 			
 			String bismiPath = applicationAudioPath+"bismillah"+".mp3";
-			if(DisplaySuraActivity.nReciterVoiceID == 1)
+			if(DisplaySuraActivity.nReciterVoiceID == 1)		//For Sudais
 			{
 				bismiPath = applicationAudioPath+"001001"+".mp3";
 			}

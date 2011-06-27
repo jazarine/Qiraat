@@ -684,7 +684,19 @@ public class DisplaySuraActivity extends Activity
 				byte data[] = new byte[1024];
 				
 				//long total = 0;	//Commented out and made public static
-				if((aurl[2] != "") && (aurl[2]!="000"))
+				
+				if((DisplaySuraActivity.nReciterVoiceID == 1) && (aurl[1] == "001") && (aurl[2] == "001"))		//For Sudais
+				{
+					int lengthOfFile = connection.getContentLength();
+					long total = 0;
+					while ((count = input.read(data)) != -1)
+					{
+						total+=count;
+						publishProgress(""+(int)((total*100)/lengthOfFile));
+						output.write(data,0,count);
+					}
+				}
+				else if((aurl[2] != "") && (aurl[2]!="000"))
 				{
 					while ((count = input.read(data)) != -1)
 					{
@@ -764,6 +776,11 @@ public class DisplaySuraActivity extends Activity
 			{
 				String url = "http://www.everyayah.com/data/"+getNameInUrl()+"audhubillah.mp3";
 				new DownloadRecitation().execute(url,"audhubillah","");
+			}
+			else if(downloadedAya.equals("000"))		//For Sudais
+			{
+				String url = "http://www.everyayah.com/data/"+getNameInUrl()+"001001.mp3";
+				new DownloadRecitation().execute(url,"001","001");
 			}
 			else if(downloadedAya == "error!")
 			{
