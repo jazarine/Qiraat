@@ -63,8 +63,8 @@ public class DisplaySuraActivity extends Activity
 	public static int statTranslationVal = -1;
 	public Handler sizeCalculatorHandler;
 	public static final String LOG_TAG = "DisplaySuraActivity";
-	public static final boolean isDEBUGLOG = false;
-	public static final boolean isERRORLOG = false;
+	public static final boolean isDEBUGLOG = true;
+	public static final boolean isERRORLOG = true;
 	public static String appAudioPath = "";
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -695,6 +695,7 @@ public class DisplaySuraActivity extends Activity
 						publishProgress(""+(int)((total*100)/lengthOfFile));
 						output.write(data,0,count);
 					}
+					return "sudaisbismi";
 				}
 				else if((aurl[2] != "") && (aurl[2]!="000"))
 				{
@@ -746,7 +747,7 @@ public class DisplaySuraActivity extends Activity
 		@Override
 		protected void onPostExecute(String downloadedAya)
 		{
-			if((downloadedAya != "bismillah") && (downloadedAya != "audhubillah") && (downloadedAya != "error!") && (downloadedAya!="000"))
+			if((downloadedAya != "bismillah") && (downloadedAya != "audhubillah") && (downloadedAya != "error!") && (downloadedAya!="000") && (downloadedAya!="sudaisbismi"))
 			{
 				if (isDEBUGLOG) {
 					Log.d(LOG_TAG, "Downloaded aya: " + downloadedAya);
