@@ -34,7 +34,15 @@ public class Recitation
 		Recitation.context = context;
 		Recitation.suraPos=suraPos;
 		Recitation.numAyas = numAyas;
-		Recitation.currentAyaPos = 1;
+		//+ Jaz 19th May 2012 - Play from current position.
+		if(Recitation.currentAyaPos == 0)
+		{
+			Recitation.currentAyaPos = 1;
+		}
+		else if(Recitation.currentAyaPos != 1)
+		{
+			Recitation.currentAyaPos--;
+		}//- Jaz
 		pathDir = new String[numAyas];
 		//String applicationAudioPath = DisplaySuraActivity.getAudioPath();
 		String applicationAudioPath = DisplaySuraActivity.appAudioPath;
