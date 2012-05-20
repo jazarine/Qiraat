@@ -63,9 +63,10 @@ public class DisplaySuraActivity extends Activity
 	public static int statTranslationVal = -1;
 	public Handler sizeCalculatorHandler;
 	public static final String LOG_TAG = "DisplaySuraActivity";
-	public static final boolean isDEBUGLOG = false;
-	public static final boolean isERRORLOG = false;
+	public static final boolean isDEBUGLOG = true;
+	public static final boolean isERRORLOG = true;
 	public static String appAudioPath = "";
+	boolean playBismillah = false;			//Jaz 20th May 2012 - Start from Current Position.
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
@@ -207,13 +208,48 @@ public class DisplaySuraActivity extends Activity
 						
 						if(audhuBismiExists == 1)
 						{
-							boolean playBismillah = true;
+							playBismillah = true;
 							if ((DisplaySuraActivity.this.suraPosition == 1) || (DisplaySuraActivity.this.suraPosition == 9))
 							{
 								playBismillah = false;
 							}
-							ayahListView.smoothScrollToPosition(0);
-							Recitation.play(DisplaySuraActivity.this, DisplaySuraActivity.this.suraPosition,DisplaySuraActivity.this.numAyas,playBismillah);
+							//+ Jaz 20th May 2012 - Start from Current Position
+							if((Recitation.currentAyaPos != 0) && (Recitation.currentAyaPos != 1))
+							{
+								AlertDialog.Builder adb=new AlertDialog.Builder(DisplaySuraActivity.this);
+								adb.setTitle("Start from beginning");
+								adb.setMessage("Do you want to start playback from current position or start from beginning?");
+								adb.setPositiveButton("Current Position", new OnClickListener() {
+									
+									@Override
+									public void onClick(DialogInterface arg0, int arg1) {
+										// TODO Auto-generated method stub
+										ayahListView.smoothScrollToPosition(0);
+										Recitation.play(DisplaySuraActivity.this, DisplaySuraActivity.this.suraPosition,DisplaySuraActivity.this.numAyas,playBismillah);
+										
+										
+									}
+								});
+								adb.setNegativeButton("Start from Beginning", new OnClickListener() {
+									
+									@Override
+									public void onClick(DialogInterface arg0, int arg1) {
+										// TODO Auto-generated method stub
+										Recitation.currentAyaPos = 0;
+										ayahListView.smoothScrollToPosition(0);
+										Recitation.play(DisplaySuraActivity.this, DisplaySuraActivity.this.suraPosition,DisplaySuraActivity.this.numAyas,playBismillah);
+										
+										
+									}
+								});
+								adb.show();
+							}
+							else
+							{
+								ayahListView.smoothScrollToPosition(0);
+								Recitation.play(DisplaySuraActivity.this, DisplaySuraActivity.this.suraPosition,DisplaySuraActivity.this.numAyas,playBismillah);
+							}
+							//- Jaz
 							menuItem.setTitle("Stop");
 						}
 					}
