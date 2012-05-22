@@ -63,10 +63,13 @@ class AyahAdapterView extends LinearLayout {
 	        translatedAyahControl.setTextSize(20);
 	        if(nTranslationVal == 2)
 	        {
-		        externalFont=Typeface.createFromAsset(context.getAssets(), "fonts/suruma.ttf");
+		        externalFont=Typeface.createFromAsset(context.getAssets(), "fonts/AnjaliOldLipi.ttf");
 		        translatedAyahControl.setTypeface(externalFont);
-		        translatedAyahControl.setTextSize(25);
+		        translatedAyahControl.setTextSize(20);
 	        }
+	        //+ Jaz 22nd May 2012 - Malayalam Font Fix
+	        translatedAya = ComplexCharacterMapper.fix(translatedAya, 0);
+	        //- Jaz
 	        translatedAyahControl.setText(translatedAya);
 	        addView(translatedAyahControl,translatedAyaParams);
         }
