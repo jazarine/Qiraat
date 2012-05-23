@@ -7,7 +7,7 @@
  *  E-Mail 	: jazarinester@gmail.com
  *  Web		: http://www.jazarine.org
  * */
-package org.qiraat;
+package com.qiraat;
 
 import java.util.ArrayList;
 
@@ -23,6 +23,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
+import com.qiraat.R;
 
 public class QiraatActivity extends Activity {
 	public static final String LOG_TAG = "QiraatActivity";

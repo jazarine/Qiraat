@@ -7,11 +7,12 @@
  *  E-Mail 	: jazarinester@gmail.com
  *  Web		: http://www.jazarine.org
  * */
-package org.qiraat;
+package com.qiraat;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import com.qiraat.R;
  
 public class QiraatSplash extends Activity {
    /** Called when the activity is first created. */
@@ -33,8 +34,8 @@ public class QiraatSplash extends Activity {
             } finally {
                finish();
                Intent i = new Intent();
-               i.setClassName("org.qiraat",
-                              "org.qiraat.QiraatActivity");
+               i.setClassName("com.qiraat",
+                              "com.qiraat.QiraatActivity");
                startActivity(i);
             }
          }

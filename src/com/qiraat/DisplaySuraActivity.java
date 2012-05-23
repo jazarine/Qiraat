@@ -6,8 +6,10 @@
  * 	Author	: Jazarine Jamal
  *  E-Mail 	: jazarinester@gmail.com
  *  Web		: http://www.jazarine.org
+ *  
+ *  Updated: 20th May 2012 - Start from current position
  * */
-package org.qiraat;
+package com.qiraat;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -47,6 +49,7 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.qiraat.R;
 
 public class DisplaySuraActivity extends Activity
 {
@@ -91,9 +94,13 @@ public class DisplaySuraActivity extends Activity
             statTranslationVal = nTranslationVal;
             if(nTranslationVal == 1)
             {
-            	xpp=this.getResources().getXml(R.xml.enyusufali);
+            	xpp=this.getResources().getXml(R.xml.entransliteration);
             }
             else if(nTranslationVal == 2)
+            {
+            	xpp=this.getResources().getXml(R.xml.enyusufali);
+            }
+            else if(nTranslationVal == 3)
             {
             	xpp=this.getResources().getXml(R.xml.mlabdulhameed);
             }

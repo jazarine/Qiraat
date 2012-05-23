@@ -1,4 +1,4 @@
-package org.qiraat;
+package com.qiraat;
 
 /*
  *	Date : 8th of June 2009
@@ -21,6 +21,7 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.view.Gravity;
 import android.widget.TextView;
+import com.qiraat.R;
 
 /**
  * This class is the main class that is responsible for Reshaping Arabic Sentences and Text

@@ -1,5 +1,7 @@
 /* Forked from http://code.google.com/p/malayalam-bible-android/source/browse/trunk/src/com/jeesmon/malayalambible/ComplexCharacterMapper.java */
-package org.qiraat;
+package com.qiraat;
+
+import com.qiraat.R;
 
 public class ComplexCharacterMapper {
 	private static final int DEFAULT_FIX = 0;

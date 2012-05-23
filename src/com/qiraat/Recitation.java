@@ -7,7 +7,7 @@
  *  E-Mail 	: jazarinester@gmail.com
  *  Web		: http://www.jazarine.org
  * */
-package org.qiraat;
+package com.qiraat;
 
 import java.io.IOException;
 
@@ -15,6 +15,7 @@ import android.content.Context;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.util.Log;
+import com.qiraat.R;
 
 public class Recitation
 {

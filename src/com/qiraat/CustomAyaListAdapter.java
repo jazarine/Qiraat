@@ -6,20 +6,25 @@
  * 	Author	: Jazarine Jamal
  *  E-Mail 	: jazarinester@gmail.com
  *  Web		: http://www.jazarine.org
+ *  
+ *  Updated: 22nd May 2012 - Malayalam Font Fix using ComplexCharacterMapper.java
  * */
-package org.qiraat;
+package com.qiraat;
 
 import java.util.List;
 
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.text.Html;
+import android.text.Spanned;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import com.qiraat.R;
 
 class AyahAdapterView extends LinearLayout {
     public AyahAdapterView(Context context, String ayah, String translatedAya, int nTranslationVal) {
@@ -61,16 +66,25 @@ class AyahAdapterView extends LinearLayout {
 			translatedAyahControl.setTextColor(Color.BLACK);
 	        translatedAyahControl.setGravity(Gravity.LEFT);
 	        translatedAyahControl.setTextSize(20);
-	        if(nTranslationVal == 2)
+	        if(nTranslationVal == 1)
+	        {
+	        	Spanned translatedAyaSpan = Html.fromHtml(translatedAya);
+	        	translatedAyahControl.setText(translatedAyaSpan);
+	        }
+	        else if(nTranslationVal == 2)
+	        {
+	        	translatedAyahControl.setText(translatedAya);
+	        }
+	        else if(nTranslationVal == 3)
 	        {
 		        externalFont=Typeface.createFromAsset(context.getAssets(), "fonts/AnjaliOldLipi.ttf");
 		        translatedAyahControl.setTypeface(externalFont);
 		        translatedAyahControl.setTextSize(20);
+		      //+ Jaz 22nd May 2012 - Malayalam Font Fix
+		        translatedAya = ComplexCharacterMapper.fix(translatedAya, 0);
+		        //- Jaz
+		        translatedAyahControl.setText(translatedAya);  
 	        }
-	        //+ Jaz 22nd May 2012 - Malayalam Font Fix
-	        translatedAya = ComplexCharacterMapper.fix(translatedAya, 0);
-	        //- Jaz
-	        translatedAyahControl.setText(translatedAya);
 	        addView(translatedAyahControl,translatedAyaParams);
         }
         addView(ayahControl, ayaParams);

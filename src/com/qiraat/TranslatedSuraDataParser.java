@@ -7,22 +7,22 @@
  *  E-Mail 	: jazarinester@gmail.com
  *  Web		: http://www.jazarine.org
  * */
-package org.qiraat;
+package com.qiraat;
 
 import java.util.ArrayList;
 
 import org.xmlpull.v1.XmlPullParser;
 
 import android.content.Context;
+import com.qiraat.R;
  
-public class SurahDataParser
+public class TranslatedSuraDataParser
 {
-	public static ArrayList<String> getAyahList(Context context,XmlPullParser xpp,int position)
+	public static ArrayList<String> getTranslatedAyaList(Context context,XmlPullParser xpp,int position)
 	{
 		ArrayList<String> ayahList = new ArrayList<String>();
 		try 
 		{
-			//XmlPullParser xpp=context.getResources().getXml(R.xml.qurandata);
 			boolean suraFound=false;
 			boolean suraFoundandFinishedGet = false;
 			while ((xpp.getEventType()!=XmlPullParser.END_DOCUMENT))
@@ -52,24 +52,10 @@ public class SurahDataParser
 					}
 					if (xpp.getName().equals("aya") && suraFound)
 					{
+						String translatedAya=xpp.getAttributeValue(1).toString();
+						translatedAya.trim();
+						ayahList.add(translatedAya);
 						
-						String ayah=ArabicUtilities.reshapeSentence(xpp.getAttributeValue(1));
-						ayahList.add(ayah);
-						
-						/*String aya=xpp.getAttributeValue(1).toString();
-						String finalAya = aya.substring(0,1) + aya.substring(1,aya.length()-1) + aya.substring(aya.length()-1,aya.length()) + "\0";
-						String[] ayaWords=finalAya.split(" ");
-						 
-						
-						String ayaFinal = "";
-						for (int nCount=0;nCount<ayaWords.length;nCount++)
-						{
-							ayaFinal +=new ArabicReshaper(ayaWords[nCount]).getReshapedWord();
-							ayaFinal += "            ";
-							//ayaFinal +=ayaWords[nCount];
-						}						
-						ayahList.add(ayaFinal);
-						*/
 					}
 				}
 				xpp.next();

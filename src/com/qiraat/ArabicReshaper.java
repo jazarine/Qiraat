@@ -1,4 +1,7 @@
-package org.qiraat;
+package com.qiraat;
+
+import com.qiraat.R;
+
 /*
  *	Date : 25th of March 2008
  *	the class is Arabic string reshaper, this class is targeting Android platform

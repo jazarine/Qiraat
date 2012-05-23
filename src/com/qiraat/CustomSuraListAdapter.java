@@ -7,7 +7,7 @@
  *  E-Mail 	: jazarinester@gmail.com
  *  Web		: http://www.jazarine.org
  * */
-package org.qiraat;
+package com.qiraat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +25,7 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.LinearLayout.LayoutParams;
+import com.qiraat.R;
 
 class SuraAdapterView extends LinearLayout {
     public SuraAdapterView(Context context, String surah, String translatedSuraName, int position) {
