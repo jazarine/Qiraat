@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+    <TextView
+            android:id="@+id/ayanum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="10dp"
+            android:textSize="20dp"
+            android:typeface="serif"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="5dp"/>
+    <TextView
+                android:id="@+id/aya"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp"
+                android:textColor="@color/brown"
+                android:textSize="23dp"
+                android:layout_centerHorizontal="true"
+                android:layout_weight="1"
+                android:layout_toRightOf="@+id/ayanum"
+                android:layout_marginRight="18dp"
+                android:layout_marginTop="14dp"
+                android:layout_marginBottom="18dp"
+                />
+
+        <TextView
+                android:id="@+id/translatedaya"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/aya"
+                android:textSize="20dp"
+                android:layout_centerHorizontal="true"
+                android:typeface="serif"
+                android:textStyle="italic"
+                android:layout_toRightOf="@+id/ayanum"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="3dp"
+                android:layout_margin="20dp"
+                android:visibility="gone"/>
+    <View
+            android:id="@+id/spacer"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/translatedaya"
+            android:layout_centerHorizontal="true"
+            android:layout_toRightOf="@+id/ayanum"
+            android:layout_margin="10dp"
+            android:visibility="gone"/>
+</RelativeLayout>

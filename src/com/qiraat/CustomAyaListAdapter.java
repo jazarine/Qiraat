@@ -13,12 +13,14 @@ package com.qiraat;
 
 import java.util.List;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.text.Html;
 import android.text.Spanned;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -123,7 +125,13 @@ class CustomAyaListAdapter extends BaseAdapter{
 		return position;
 	}
 
-
+    /*private view holder class*/
+    private class ViewHolder {
+        TextView txtAyaNum;
+        TextView txtAya;
+        TextView txtTranslatedAya;
+        View spacer;
+    }
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
@@ -133,7 +141,72 @@ class CustomAyaListAdapter extends BaseAdapter{
 		{
 			translatedAya = translatedAyaList.get(position);
 		}
-        return new AyahAdapterView(this.context, ayah, translatedAya,this.nTranslationVal );
+        //return new AyahAdapterView(this.context, ayah, translatedAya,this.nTranslationVal );
+        ViewHolder holder = null;
+        LayoutInflater mInflater = (LayoutInflater) context
+                .getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+        if (convertView == null) {
+            convertView = mInflater.inflate(R.layout.list_item_ayas, null);
+            holder = new ViewHolder();
+            holder.txtAyaNum = (TextView) convertView.findViewById(R.id.ayanum);
+            holder.txtAya = (TextView) convertView.findViewById(R.id.aya);
+            holder.txtTranslatedAya = (TextView) convertView.findViewById(R.id.translatedaya);
+            holder.spacer = (View) convertView.findViewById(R.id.spacer);
+            //holder.imageView = (ImageView) convertView.findViewById(R.id.icon);
+            convertView.setTag(holder);
+        } else
+            holder = (ViewHolder) convertView.getTag();
+
+        holder.txtAyaNum.setText(String.valueOf(position+1));
+        //holder.txtAyaNum.setBackgroundResource(R.layout.linesample);
+
+
+        Typeface externalFont=Typeface.createFromAsset(context.getAssets(), "fonts/me_quran.ttf");
+
+
+        holder.txtAya.setTypeface(externalFont);
+        //holder.txtAya.setTextDirection(View.TEXT_DIRECTION_RTL);
+        //holder.txtAya.setGravity(Gravity.RIGHT);
+        holder.txtAya.setText(ayah);
+        //holder.txtAya.lay
+
+
+        if(nTranslationVal != 0)
+        {
+            holder.txtTranslatedAya.setVisibility(View.VISIBLE);
+            holder.spacer.setVisibility(View.VISIBLE);
+            //Typeface translatedTypeFace = Typeface.create("serif", Typeface.ITALIC);
+            //holder.txtTranslatedAya.setTypeface(translatedTypeFace );
+            //holder.txtTranslatedAya.setTextColor(Color.BLACK);
+            holder.txtTranslatedAya.setGravity(Gravity.LEFT);
+            //holder.txtTranslatedAya.setTextSize(20);
+            if(nTranslationVal == 1)
+            {
+                Spanned translatedAyaSpan = Html.fromHtml(translatedAya);
+                //translatedAya = translatedAyaSpan.toString();
+                holder.txtTranslatedAya.setText(translatedAyaSpan);
+            }
+            else if((nTranslationVal == 2) || (nTranslationVal == 3))
+            {
+                //holder.txtTranslatedAya.setText(translatedAya);
+                holder.txtTranslatedAya.setText(translatedAya);
+            }
+            else if(nTranslationVal == 4)
+            {
+                externalFont=Typeface.createFromAsset(context.getAssets(), "fonts/AnjaliOldLipi.ttf");
+                //holder.txtTranslatedAya.setTypeface(externalFont);
+                //holder.txtTranslatedAya.setTextSize(20);
+                //+ Jaz 22nd May 2012 - Malayalam Font Fix
+                //translatedAya = ComplexCharacterMapper.fix(translatedAya, 0);
+                //- Jaz
+                holder.txtTranslatedAya.setText(translatedAya);
+            }
+
+        }
+
+        //holder.imageView.setImageResource(rowItem.getImageId());
+
+        return convertView;
 	}
 	
 }

@@ -3,13 +3,12 @@
               android:orientation="vertical"
               android:layout_width="fill_parent"
               android:layout_height="fill_parent">
-    <include layout="@layout/qiraatheaderbar"/>
-    <ListView android:layout_width="fill_parent"
-              android:id="@+id/surahList"
+    <ListView android:id="@+id/surahList"
+              android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:layout_weight="1"
               android:fastScrollEnabled="true"
               android:scrollingCache="false"
               android:background="@drawable/suralistbg"
-              android:cacheColorHint="#00000000"/>
+              android:cacheColorHint="#00000000">
+    </ListView>
 </LinearLayout>

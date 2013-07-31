@@ -79,13 +79,13 @@ public class DisplaySuraActivity extends Activity
         	setContentView(R.layout.displaysurah);
         	ayahListView = (ListView)findViewById(R.id.ayahList);
         	ArrayList<String> ayahList = new ArrayList<String>();
-            TextView suraHeaderView = (TextView)findViewById(R.id.suraHeader);
+            //TextView suraHeaderView = (TextView)findViewById(R.id.suraHeader);
             Typeface externalFont=Typeface.createFromAsset(getAssets(), "fonts/me_quran_volt_newmet.ttf");
-            suraHeaderView.setTypeface(externalFont);
+            //suraHeaderView.setTypeface(externalFont);
             XmlPullParser xpp=this.getResources().getXml(R.xml.quransimple);
             
             Bundle bundle = this.getIntent().getExtras();
-            suraHeaderView.setText(bundle.getString("suraName"));
+            //suraHeaderView.setText(bundle.getString("suraName"));
             suraPosition = bundle.getInt("position");
             numAyas = bundle.getInt("numAyas");
             ayahList = SurahDataParser.getAyahList(this,xpp,suraPosition);
@@ -98,9 +98,13 @@ public class DisplaySuraActivity extends Activity
             }
             else if(nTranslationVal == 2)
             {
-            	xpp=this.getResources().getXml(R.xml.enyusufali);
+                xpp=this.getResources().getXml(R.xml.ensahih);
             }
             else if(nTranslationVal == 3)
+            {
+            	xpp=this.getResources().getXml(R.xml.enyusufali);
+            }
+            else if(nTranslationVal == 4)
             {
             	xpp=this.getResources().getXml(R.xml.mlabdulhameed);
             }
