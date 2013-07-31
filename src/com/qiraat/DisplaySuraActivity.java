@@ -47,6 +47,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.qiraat.R;
@@ -58,13 +62,14 @@ public class DisplaySuraActivity extends Activity
 	int numAyas = 0;
 	public static int nReciterVoiceID = 0;
 	public static ProgressDialog mProgressDialog;
-	public static ProgressDialog mCalcSizeDialog;
+	//public static ProgressDialog mCalcSizeDialog;
+    ProgressDialog progressDialog;
 	public static final int DIALOG_DOWNLOAD_PROGRESS = 0;
 	public static long totalDownloadSize = 0;
 	public static long totalDownloaded = 0;
 	public static MenuItem playStopMenuItem;
 	public static int statTranslationVal = -1;
-	public Handler sizeCalculatorHandler;
+	//public Handler sizeCalculatorHandler;
 	public static final String LOG_TAG = "DisplaySuraActivity";
 	public static final boolean isDEBUGLOG = true;
 	public static final boolean isERRORLOG = true;
@@ -281,7 +286,8 @@ public class DisplaySuraActivity extends Activity
 									PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 									final PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "Stay awake on size computation");
 									wl.acquire();
-									final ProgressDialog dialog = ProgressDialog.show(
+                                    startDownload(DisplaySuraActivity.this.suraPosition,DisplaySuraActivity.this.numAyas);
+									/*final ProgressDialog dialog = ProgressDialog.show(
 		                                    DisplaySuraActivity.this,
 		                                    "Computing size of sura",
 		                                    "This may take some time depending on the size of the sura.");
@@ -328,7 +334,7 @@ public class DisplaySuraActivity extends Activity
 				                           }
 									});
 									background.setPriority(java.lang.Thread.MAX_PRIORITY);
-									background.start();
+									background.start();*/
 									
 								}
 								else
@@ -549,14 +555,114 @@ public class DisplaySuraActivity extends Activity
 	private void startDownload(int suraPosition, int numAyas) {
 		// TODO Auto-generated method stub
 		String suraID = calculateSuraId(suraPosition);
-		String ayaID = "";
-		String url = "";
-		
-		ayaID = calculateAyaId(1);
-		url = "http://www.everyayah.com/data/"+getNameInUrl()+suraID+ayaID+".mp3";
-		new DownloadRecitation().execute(url,suraID,ayaID);
+		String ayaID = calculateAyaId(1);
+		String url = "http://www.everyayah.com/data/"+getNameInUrl()+suraID+ayaID+".mp3";
+        ArrayList<String> urlList=new ArrayList<String>();
+        urlList.add(suraID);
+        for(int ayaI=1;ayaI<=numAyas;ayaI++){
+            urlList.add("http://www.everyayah.com/data/"+getNameInUrl()+suraID+calculateAyaId(ayaI)+".mp3");
+        }
+        String[] urlArr=urlList.toArray(new String[urlList.size()]);
+        /*Creating and executing background task*/
+        GetSuraTask task = new GetSuraTask(this);
+        task.execute(urlArr);
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Downloading Sura...");
+        progressDialog.setMessage("Loading...");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progressDialog.setIndeterminate(false);
+        progressDialog.setMax(100);
+        //progressDialog.setIcon(R.drawable.arrow_stop_down);
+        progressDialog.setCancelable(true);
+        progressDialog.show();
+		//new DownloadRecitation().execute(url,suraID,ayaID);
 	}
-	
+    private class GetSuraTask extends AsyncTask<String, Integer, String> {
+        private Activity context;
+        int noOfURLs;
+        int downloadedURLNum=0;
+        public GetSuraTask(Activity context) {
+            this.context = context;
+        }
+
+        @Override
+        protected String doInBackground(String... urls) {
+            noOfURLs = urls.length;
+            int i=0;
+            for (String url : urls) {
+                if(i==0){
+                    i++;
+                    continue;
+                }
+                String ayaI=calculateAyaId(i);
+                int status = downloadAya(url,urls[0],ayaI);
+                i++;
+            }
+            return "done";
+        }
+
+        private int downloadAya(String urlString,String suraId,String ayaId) {
+
+            int count = 0;
+            //Bitmap bitmap = null;
+
+            URL url;
+            InputStream inputStream = null;
+            BufferedOutputStream outputStream = null;
+
+            try {
+                url = new URL(urlString);
+                URLConnection connection = url.openConnection();
+                int lengthOfFile = connection.getContentLength();
+
+                inputStream = new BufferedInputStream(url.openStream());
+                ByteArrayOutputStream dataStream = new ByteArrayOutputStream();
+
+                String applicationAudioPath = DisplaySuraActivity.appAudioPath;
+                //OutputStream output = new FileOutputStream(applicationAudioPath+aurl[1]+aurl[2]+".mp3");
+
+                outputStream = new BufferedOutputStream(new FileOutputStream(applicationAudioPath+suraId+ayaId+".mp3"));
+
+                byte data[] = new byte[512];
+                long total = 0;
+
+                while ((count = inputStream.read(data)) != -1) {
+                    total += count;
+                    /*publishing progress update on UI thread.
+                    Invokes onProgressUpdate()*/
+                    publishProgress((int)((total*100)/lengthOfFile));
+
+                    // writing data to byte array stream
+                    outputStream.write(data, 0, count);
+                }
+                outputStream.flush();
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                FileUtils.close(inputStream);
+                FileUtils.close(outputStream);
+            }
+            downloadedURLNum++;
+            return 1;
+        }
+
+        protected void onProgressUpdate(Integer... progress) {
+            progressDialog.setProgress(progress[0]);
+            if(downloadedURLNum != 0) {
+                progressDialog.setMessage("Loading " + (downloadedURLNum) + "/" + numAyas);
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String status) {
+            progressDialog.dismiss();
+        }
+
+    }
 	private String calculateAyaId(int lastDownloadedAya) 
 	{
 		// TODO Auto-generated method stub
@@ -738,11 +844,11 @@ public class DisplaySuraActivity extends Activity
 					long total = 0;
 					while ((count = input.read(data)) != -1)
 					{
-						total+=count;
-						publishProgress(""+(int)((total*100)/lengthOfFile));
-						output.write(data,0,count);
-					}
-					return "sudaisbismi";
+                        total+=count;
+                        publishProgress(""+(int)((total*100)/lengthOfFile));
+                        output.write(data,0,count);
+                    }
+                    return "sudaisbismi";
 				}
 				else if((aurl[2] != "") && (aurl[2]!="000"))
 				{
