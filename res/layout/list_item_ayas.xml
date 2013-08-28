@@ -8,6 +8,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingBottom="10dp"
+            android:textColor="@color/black"
             android:textSize="20dp"
             android:typeface="serif"
             android:layout_centerVertical="true"
@@ -30,11 +31,12 @@
 
         <TextView
                 android:id="@+id/translatedaya"
-                android:layout_width="fill_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/aya"
                 android:textSize="20dp"
                 android:layout_centerHorizontal="true"
+                android:textColor="@color/black"
                 android:typeface="serif"
                 android:textStyle="italic"
                 android:layout_toRightOf="@+id/ayanum"

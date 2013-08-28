@@ -42,15 +42,21 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.PowerManager;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
+
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.qiraat.R;
@@ -60,6 +66,7 @@ public class DisplaySuraActivity extends Activity
 	private static ListView ayahListView;
 	int suraPosition = 0;
 	int numAyas = 0;
+    String suraName;
 	public static int nReciterVoiceID = 0;
 	public static ProgressDialog mProgressDialog;
 	//public static ProgressDialog mCalcSizeDialog;
@@ -75,7 +82,13 @@ public class DisplaySuraActivity extends Activity
 	public static final boolean isERRORLOG = true;
 	public static String appAudioPath = "";
 	boolean playBismillah = false;			//Jaz 20th May 2012 - Start from Current Position.
-	@Override
+    String array_gotoAya[];
+    static int gotoAyaPos = 0;
+    static boolean ayaOnTapEnabled=false;
+    public static MenuItem ayaOnTapMenuItem;
+
+
+    @Override
 	public void onCreate(Bundle savedInstanceState)
 	{
         super.onCreate(savedInstanceState);
@@ -88,9 +101,10 @@ public class DisplaySuraActivity extends Activity
             Typeface externalFont=Typeface.createFromAsset(getAssets(), "fonts/me_quran_volt_newmet.ttf");
             //suraHeaderView.setTypeface(externalFont);
             XmlPullParser xpp=this.getResources().getXml(R.xml.quransimple);
-            
+
             Bundle bundle = this.getIntent().getExtras();
             //suraHeaderView.setText(bundle.getString("suraName"));
+            suraName = bundle.getString("suraName");
             suraPosition = bundle.getInt("position");
             numAyas = bundle.getInt("numAyas");
             ayahList = SurahDataParser.getAyahList(this,xpp,suraPosition);
@@ -121,6 +135,28 @@ public class DisplaySuraActivity extends Activity
             
             CustomAyaListAdapter customAdapter = new CustomAyaListAdapter(this, ayahList,translatedAyaList, nTranslationVal);
             ayahListView.setAdapter(customAdapter);
+
+            array_gotoAya=new String[numAyas];
+            for(int i=0;i<numAyas;i++){
+                array_gotoAya[i]=String.valueOf(i+1);
+            }
+            getAudioPath(DisplaySuraActivity.this.getExternalFilesDir(null).getAbsolutePath());	//Just call this once and set the static var
+
+            ayahListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                public void onItemClick(AdapterView<?> parent, View view,
+                                        int position, long id) {
+
+                    if(ayaOnTapEnabled){
+                        if(Recitation.isPlaying()){
+                            Recitation.pausePlayer();
+                        }
+                        else{
+                            Recitation.currentAyaPos=position+2;
+                            Recitation.play(DisplaySuraActivity.this, DisplaySuraActivity.this.suraPosition,DisplaySuraActivity.this.numAyas,false);
+                        }
+                    }
+                }
+            });
         }
         catch(Exception ex)
         {
@@ -137,15 +173,18 @@ public class DisplaySuraActivity extends Activity
 		super.onCreateOptionsMenu(menu);
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.suramenu,menu);
-		return true;
+        return true;
 	}
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu)
 	{
-		playStopMenuItem = menu.getItem(0);
+		playStopMenuItem = menu.getItem(1);
+        ayaOnTapMenuItem = menu.getItem(2);
 		if(Recitation.isPlaying())
 		{
-			playStopMenuItem.setTitle("Stop");
+			if(ayaOnTapEnabled!=true){
+                playStopMenuItem.setTitle("Stop");
+            }
 		}
 		return super.onPrepareOptionsMenu(menu);
 	}
@@ -175,9 +214,15 @@ public class DisplaySuraActivity extends Activity
 	{
 			switch(menuItem.getItemId())
 			{
-			case R.id.recite_sura:
+
+            case R.id.recite_sura:
 				//play sura
 				playStopMenuItem = menuItem;
+                if(ayaOnTapEnabled){
+                    ayaOnTapEnabled=false;
+                    Toast.makeText(this, "Aya recitation on tap disabled.", 5).show();
+                    ayaOnTapMenuItem.setTitle("Enable Aya Recite on Tap");
+                }
 				if((menuItem.getTitle() != "Stop") &&(!Recitation.isPlaying()))
 				{
 					boolean mExternalStorageAvailable = false;
@@ -206,7 +251,7 @@ public class DisplaySuraActivity extends Activity
 						adb.show();
 						break;
 					}
-					getAudioPath(DisplaySuraActivity.this.getExternalFilesDir(null).getAbsolutePath());	//Just call this once and set the static var
+                    getAudioPath(DisplaySuraActivity.this.getExternalFilesDir(null).getAbsolutePath());
 					boolean isFoldersInitialized = initializeFolders();
 					if(!isFoldersInitialized)
 					{
@@ -240,7 +285,7 @@ public class DisplaySuraActivity extends Activity
 									@Override
 									public void onClick(DialogInterface arg0, int arg1) {
 										// TODO Auto-generated method stub
-										ayahListView.smoothScrollToPosition(0);
+										ayahListView.setSelection(Recitation.currentAyaPos-2);
 										Recitation.play(DisplaySuraActivity.this, DisplaySuraActivity.this.suraPosition,DisplaySuraActivity.this.numAyas,playBismillah);
 										
 										
@@ -252,7 +297,7 @@ public class DisplaySuraActivity extends Activity
 									public void onClick(DialogInterface arg0, int arg1) {
 										// TODO Auto-generated method stub
 										Recitation.currentAyaPos = 0;
-										ayahListView.smoothScrollToPosition(0);
+										ayahListView.setSelection(0);
 										Recitation.play(DisplaySuraActivity.this, DisplaySuraActivity.this.suraPosition,DisplaySuraActivity.this.numAyas,playBismillah);
 										
 										
@@ -262,7 +307,7 @@ public class DisplaySuraActivity extends Activity
 							}
 							else
 							{
-								ayahListView.smoothScrollToPosition(0);
+								ayahListView.setSelection(0);
 								Recitation.play(DisplaySuraActivity.this, DisplaySuraActivity.this.suraPosition,DisplaySuraActivity.this.numAyas,playBismillah);
 							}
 							//- Jaz
@@ -357,9 +402,27 @@ public class DisplaySuraActivity extends Activity
 					menuItem.setTitle("Recite Sura");
 				}
 				return true;
+            case R.id.recite_aya_touch:
+                ayaOnTapMenuItem = menuItem;
+                if(ayaOnTapEnabled==false){
+                    ayaOnTapEnabled = true;
+                    Toast.makeText(this, "Aya recitation on tap enabled.", 5).show();
+                    menuItem.setTitle("Disable Aya Recite on Tap");
+                }
+                else
+                {
+                    ayaOnTapEnabled=false;
+                    Toast.makeText(this, "Aya recitation on tap disabled.", 5).show();
+                    menuItem.setTitle("Enable Aya Recite on Tap");
+                    //Recitation.currentAyaPos=0;
+                }
+                return true;
 			case R.id.change_translation:
 				openChangeTranslationDialog();
 				return true;
+            case R.id.gotoAya:
+                openGotoAyaDialog();
+                return true;
 			case R.id.change_reciterVoice:
 				openChangeReciterVoiceDialog();
 				return true;
@@ -574,7 +637,7 @@ public class DisplaySuraActivity extends Activity
         progressDialog.setIndeterminate(false);
         progressDialog.setMax(100);
         //progressDialog.setIcon(R.drawable.arrow_stop_down);
-        progressDialog.setCancelable(true);
+        progressDialog.setCancelable(false);
         progressDialog.show();
 		//new DownloadRecitation().execute(url,suraID,ayaID);
 	}
@@ -596,7 +659,7 @@ public class DisplaySuraActivity extends Activity
                     continue;
                 }
                 String ayaI=calculateAyaId(i);
-                int status = downloadAya(url,urls[0],ayaI);
+                int status = downloadAya(url, urls[0], ayaI);
                 i++;
             }
             return "done";
@@ -701,6 +764,87 @@ public class DisplaySuraActivity extends Activity
 		return suraID;
 	}
 
+    private void openGotoAyaDialog() {
+        // TODO Auto-generated method stub
+        //TextView tx;
+        AlertDialog.Builder builder;
+        AlertDialog alertDialog;
+
+        Context mContext = this;
+        LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(LAYOUT_INFLATER_SERVICE);
+        View layout = inflater.inflate(R.layout.spinner,null);
+
+
+
+        Spinner s = (Spinner) layout.findViewById(R.id.Spinner01);
+
+        //ArrayAdapter adapter = new ArrayAdapter(this,android.R.layout.simple_spinner_item, array_spinner);
+
+        //s.setAdapter(adapter);
+
+        //Spinner food = (Spinner) findViewById(R.id.spinner1);
+        /*ArrayAdapter<CharSequence> foodadapter = ArrayAdapter.createFromResource(
+                this,R.array.translations , R.layout.spinner_layout);*/
+        //int[] array_spinner=new int[10];
+        ArrayAdapter<String> foodadapter = new ArrayAdapter<String>(this,
+                R.layout.spinner_layout, array_gotoAya);
+        TextView tvSuraNameLabel=(TextView) layout.findViewById(R.id.suranamelabel);
+        tvSuraNameLabel.setText(suraName);
+        foodadapter.setDropDownViewResource(R.layout.spinner_layout);
+        s.setAdapter(foodadapter);
+        s.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                // your code here
+                gotoAyaPos = position;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // your code here
+            }
+
+        });
+
+        builder = new AlertDialog.Builder(mContext);
+        builder.setView(layout);
+        builder.setPositiveButton("OK", new OnClickListener()
+        {
+            @Override
+            public void onClick(DialogInterface arg0, int arg1) {
+                // TODO Auto-generated method stub
+                //changeTranslation(statTranslationVal);
+                ayahListView.setSelection(gotoAyaPos);
+                //ayahListView.position
+            }
+        });
+        alertDialog = builder.create();
+        alertDialog.setTitle("Go To Aya");
+        alertDialog.show();
+
+        /*AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Go to Aya");
+        String[] types = {"By Zip", "By Category"};
+        builder.setItems(types, new OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                dialog.dismiss();
+                switch(which){
+                    case 0:
+                        //toast("hi");
+                        break;
+                    case 1:
+                        //onCategoryRequested();
+                        break;
+                }
+            }
+
+        });
+
+        builder.show();*/
+    }
 	private void openChangeTranslationDialog() {
 		// TODO Auto-generated method stub
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);

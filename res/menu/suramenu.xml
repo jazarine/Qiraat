@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/gotoAya"
+          android:title="Go to Aya" />
     <item android:id="@+id/recite_sura"
-          android:title="Recite Sura" />
+          android:title="Recite Whole Sura" />
+    <item android:id="@+id/recite_aya_touch"
+          android:title="Enable Recite on Aya Tap" />
     <item android:id="@+id/change_translation"
     	  android:title="Change Translation" />
    	<item android:id="@+id/change_reciterVoice"

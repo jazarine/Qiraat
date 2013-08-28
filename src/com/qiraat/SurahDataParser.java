@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import org.xmlpull.v1.XmlPullParser;
 
 import android.content.Context;
+import android.os.Build;
+
 import com.qiraat.R;
  
 public class SurahDataParser
@@ -26,6 +28,7 @@ public class SurahDataParser
 			//XmlPullParser xpp=context.getResources().getXml(R.xml.qurandata);
 			boolean suraFound=false;
 			boolean suraFoundandFinishedGet = false;
+            int ayanum=0;
 			while ((xpp.getEventType()!=XmlPullParser.END_DOCUMENT))
 			{
 				if (xpp.getEventType()==XmlPullParser.START_TAG)
@@ -53,9 +56,16 @@ public class SurahDataParser
 					}
 					if (xpp.getName().equals("aya") && suraFound)
 					{
-						
-						String ayah=ArabicUtilities.reshapeSentence(xpp.getAttributeValue(1));
+
+                        String ayah="";
+                        //if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.HONEYCOMB_MR2){
+                            //ayah=ArabicUtilities.reshapeSentence(xpp.getAttributeValue(1));
+                        //}
+                        //else{
+                            ayah=xpp.getAttributeValue(1);
+                        //}
 						ayahList.add(ayah);
+                        ayanum+=1;
 						
 						/*String aya=xpp.getAttributeValue(1).toString();
 						String finalAya = aya.substring(0,1) + aya.substring(1,aya.length()-1) + aya.substring(aya.length()-1,aya.length()) + "\0";

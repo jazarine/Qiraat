@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="wrap_content"
+              android:layout_height="fill_parent"
+              android:orientation="vertical" >
+    <TextView
+        android:id="@+id/suranamelabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sura Al Nas"
+        android:layout_margin="10dp"
+        android:textSize="20dp"
+        />
+    <Spinner
+            android:id="@+id/Spinner01"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/suranamelabel"
+            android:layout_alignParentRight="true"
+            android:layout_centerHorizontal="true"/>
+</RelativeLayout>

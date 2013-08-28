@@ -114,7 +114,9 @@ public class Recitation
 				@Override
 				public void onCompletion(MediaPlayer arg0) {
 					// TODO Auto-generated method stub					
-					Recitation.playNextAya();
+					if(DisplaySuraActivity.ayaOnTapEnabled!=true){
+                        Recitation.playNextAya();
+                    }
 				}
 				
 			});
@@ -166,7 +168,9 @@ public class Recitation
 			
 			qiraatPlayer.start();
 			currentAyaPos++;
-			DisplaySuraActivity.playStopMenuItem.setTitle("Stop");
+            if(DisplaySuraActivity.ayaOnTapEnabled!=true){
+			    DisplaySuraActivity.playStopMenuItem.setTitle("Stop");
+            }
 		}
 		else
 		{

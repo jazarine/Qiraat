@@ -19,6 +19,7 @@ import android.graphics.LinearGradient;
 import android.graphics.Shader;
 import android.graphics.Typeface;
 import android.graphics.Shader.TileMode;
+import android.os.Build;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -140,6 +141,14 @@ class CustomSuraListAdapter extends BaseAdapter{
             holder = (ViewHolder) convertView.getTag();
 
         holder.txtSuraNum.setText(String.valueOf(position+1));
+
+        if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.HONEYCOMB_MR2){
+            Typeface externalFont=Typeface.createFromAsset(context.getAssets(), "fonts/me_quran_volt_newmet.ttf");
+            holder.txtSuraName.setTypeface(externalFont);
+            //holder.txtSuraName.setTextSize(30);
+        }
+
+
         holder.txtSuraName.setText(surah);
         holder.txtTranslatedSuraName.setText(translatedSuraName);
         //holder.imageView.setImageResource(rowItem.getImageId());
