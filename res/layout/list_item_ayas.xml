@@ -38,7 +38,7 @@
                 android:layout_centerHorizontal="true"
                 android:textColor="@color/black"
                 android:typeface="serif"
-                android:textStyle="italic"
+                android:textStyle="normal"
                 android:layout_toRightOf="@+id/ayanum"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="3dp"

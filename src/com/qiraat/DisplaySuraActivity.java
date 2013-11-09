@@ -162,7 +162,7 @@ public class DisplaySuraActivity extends Activity
         {
         	AlertDialog.Builder adb=new AlertDialog.Builder(DisplaySuraActivity.this);
 			adb.setTitle("Error!");
-			adb.setMessage("Encountered Exception: "+ex.toString());
+			adb.setMessage("Encountered Exception: "+ex.toString()+"trace: "+ex.getMessage());
 			adb.setNegativeButton("Cancel", null);
 			adb.show();
         }

@@ -64,7 +64,7 @@ class AyahAdapterView extends LinearLayout {
         //Translation..
         if(nTranslationVal != 0)
         {
-        	Typeface translatedTypeFace = Typeface.create("serif", Typeface.ITALIC);
+        	Typeface translatedTypeFace = Typeface.create("serif", Typeface.NORMAL);
 			translatedAyahControl.setTypeface(translatedTypeFace );
 			translatedAyahControl.setTextColor(Color.BLACK);
 	        translatedAyahControl.setGravity(Gravity.LEFT);
@@ -160,19 +160,20 @@ class CustomAyaListAdapter extends BaseAdapter{
 
         holder.txtAyaNum.setText(String.valueOf(position+1));
 
-        Typeface externalFont=Typeface.createFromAsset(context.getAssets(), "fonts/me_quran.ttf");
-        //holder.txtAya.setTypeface(externalFont);
+        Typeface externalFont=Typeface.createFromAsset(context.getAssets(), "fonts/me_quran_volt_newmet.ttf");
+        holder.txtAya.setTypeface(externalFont);
 
 
         if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.HONEYCOMB_MR2)
         {
-            //ayah=ayah+'\u200f'; //Jaz - Append the RTF character so that the last character is displayed as last character itself.
-            //holder.txtAya.setTypeface(externalFont);
+            ayah=ayah+'\u200f'; //Jaz - Append the RTF character so that the last character is displayed as last character itself.
+
+            holder.txtAya.setTypeface(externalFont);
         }
         //holder.txtAya.setTextDirection(View.TEXT_DIRECTION_RTL);
 
         holder.txtAya.setText(ayah);
-        //holder.txtAya.setGravity(Gravity.RIGHT);
+        holder.txtAya.setGravity(Gravity.RIGHT);
 
 
         if(nTranslationVal != 0)
