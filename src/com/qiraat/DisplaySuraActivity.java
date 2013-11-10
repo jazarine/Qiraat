@@ -140,8 +140,36 @@ public class DisplaySuraActivity extends Activity
             for(int i=0;i<numAyas;i++){
                 array_gotoAya[i]=String.valueOf(i+1);
             }
-            getAudioPath(DisplaySuraActivity.this.getExternalFilesDir(null).getAbsolutePath());	//Just call this once and set the static var
+            //+ Jaz 10-Nov-2013. Check for external SD Card before using it.
+            boolean mExternalStorageAvailable = false;
+            boolean mExternalStorageWritable = false;
+            String state = Environment.getExternalStorageState();
 
+            if (Environment.MEDIA_MOUNTED.equals(state)) {
+                // We can read and write the media
+                mExternalStorageAvailable = mExternalStorageWritable = true;
+            } else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+                // We can only read the media
+                mExternalStorageAvailable = true;
+                mExternalStorageWritable = false;
+            } else {
+                // Something else is wrong. It may be one of many other states, but all we need
+                //  to know is we can neither read nor write
+                mExternalStorageAvailable = mExternalStorageWritable = false;
+            }
+
+            if((!mExternalStorageAvailable) || (!mExternalStorageWritable))
+            {
+                AlertDialog.Builder adb=new AlertDialog.Builder(DisplaySuraActivity.this);
+                adb.setTitle("No SD Card");
+                adb.setMessage("No SD Card Detected. Cannot play Recitation.");
+                adb.setPositiveButton("OK", null);
+                adb.show();
+            }
+            else{
+            //- Jaz
+                getAudioPath(DisplaySuraActivity.this.getExternalFilesDir(null).getAbsolutePath());	//Just call this once and set the static var
+            }
             ayahListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 public void onItemClick(AdapterView<?> parent, View view,
                                         int position, long id) {

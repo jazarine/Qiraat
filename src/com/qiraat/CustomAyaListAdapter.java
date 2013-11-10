@@ -161,14 +161,14 @@ class CustomAyaListAdapter extends BaseAdapter{
         holder.txtAyaNum.setText(String.valueOf(position+1));
 
         Typeface externalFont=Typeface.createFromAsset(context.getAssets(), "fonts/me_quran_volt_newmet.ttf");
-        holder.txtAya.setTypeface(externalFont);
 
-
-        if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.HONEYCOMB_MR2)
-        {
-            ayah=ayah+'\u200f'; //Jaz - Append the RTF character so that the last character is displayed as last character itself.
-
+        if(Build.VERSION.SDK_INT != Build.VERSION_CODES.JELLY_BEAN){
             holder.txtAya.setTypeface(externalFont);
+
+            if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.HONEYCOMB_MR2)
+            {
+                ayah=ayah+'\u200f'; //Jaz - Append the RTF character so that the last character is displayed as last character itself.
+            }
         }
         //holder.txtAya.setTextDirection(View.TEXT_DIRECTION_RTL);
 

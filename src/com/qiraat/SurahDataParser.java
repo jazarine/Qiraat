@@ -58,11 +58,15 @@ public class SurahDataParser
 					{
 
                         String ayah="";
-                        if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN_MR1){
+                        if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.HONEYCOMB_MR2){
                             ayah=ArabicUtilities.reshapeSentence(xpp.getAttributeValue(1));
+                        }
+                        else if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN){
+                            ayah=xpp.getAttributeValue(1);
                         }
                         else{
                             ayah=xpp.getAttributeValue(1);
+                            ayah=ayah.replaceAll(" ","      ");
                         }
 						ayahList.add(ayah);
                         ayanum+=1;
