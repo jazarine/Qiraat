@@ -162,7 +162,7 @@ class CustomAyaListAdapter extends BaseAdapter{
 
         Typeface externalFont=Typeface.createFromAsset(context.getAssets(), "fonts/me_quran_volt_newmet.ttf");
 
-        if(Build.VERSION.SDK_INT != Build.VERSION_CODES.JELLY_BEAN){
+        if((Build.VERSION.SDK_INT != Build.VERSION_CODES.JELLY_BEAN) && (Build.VERSION.SDK_INT != Build.VERSION_CODES.ICE_CREAM_SANDWICH)){
             holder.txtAya.setTypeface(externalFont);
 
             if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.HONEYCOMB_MR2)
