@@ -660,7 +660,7 @@ public class DisplaySuraActivity extends Activity
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Downloading Sura...");
-        progressDialog.setMessage("Loading...");
+        progressDialog.setMessage("Downloading...");
         progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         progressDialog.setIndeterminate(false);
         progressDialog.setMax(100);
@@ -744,7 +744,7 @@ public class DisplaySuraActivity extends Activity
         protected void onProgressUpdate(Integer... progress) {
             progressDialog.setProgress(progress[0]);
             if(downloadedURLNum != 0) {
-                progressDialog.setMessage("Loading " + (downloadedURLNum) + "/" + numAyas);
+                progressDialog.setMessage("Downloading " + (downloadedURLNum) + "/" + numAyas);
             }
         }
 
