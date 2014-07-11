@@ -186,7 +186,7 @@ class CustomAyaListAdapter extends BaseAdapter{
                 Spanned translatedAyaSpan = Html.fromHtml(translatedAya);
                 holder.txtTranslatedAya.setText(translatedAyaSpan);
             }
-            else if((nTranslationVal == 2) || (nTranslationVal == 3))
+            else if((nTranslationVal == 2) || (nTranslationVal == 3) || (nTranslationVal == 5))         //Jaz - Add Spanish Translation(5)
             {
                 //holder.txtTranslatedAya.setText(translatedAya);
                 holder.txtTranslatedAya.setText(translatedAya);

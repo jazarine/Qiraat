@@ -127,6 +127,10 @@ public class DisplaySuraActivity extends Activity
             {
             	xpp=this.getResources().getXml(R.xml.mlabdulhameed);
             }
+            else if(nTranslationVal == 5)               //Jaz - Add Spanish Translation
+            {
+                xpp=this.getResources().getXml(R.xml.escortes);
+            }
             ArrayList<String> translatedAyaList = new ArrayList<String>();
             if(nTranslationVal != 0)
             {
